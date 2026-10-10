@@ -1,0 +1,16 @@
+include(FetchContent)
+
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.6.0
+)
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(soilsim_tests
+    test_smoke.cpp
+)
+
+target_link_libraries(soilsim_tests PRIVATE Catch2::Catch2WithMain soilsim_core)
+
+add_test(NAME soilsim_tests COMMAND soilsim_tests)

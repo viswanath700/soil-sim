@@ -1,0 +1,27 @@
+# Build outputs
+out/
+build/
+**/build/
+**/out/
+
+# Visual Studio user data
+.vs/
+
+# CMake-generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+
+# Generated binaries
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.log
+
+# Editor caches
+*.swp
+*.tmp
