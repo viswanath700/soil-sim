@@ -8,9 +8,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 add_executable(soilsim_tests
+    test_soil.cpp
     test_smoke.cpp
 )
 
 target_link_libraries(soilsim_tests PRIVATE Catch2::Catch2WithMain soilsim_core)
+target_compile_definitions(soilsim_tests PRIVATE
+    SOILSIM_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+)
 
 add_test(NAME soilsim_tests COMMAND soilsim_tests)

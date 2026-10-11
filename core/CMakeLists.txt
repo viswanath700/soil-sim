@@ -1,4 +1,5 @@
 add_library(soilsim_core STATIC
+    src/soil.cpp
     src/version.cpp
 )
 
@@ -8,6 +9,7 @@ target_include_directories(soilsim_core
 )
 
 target_compile_features(soilsim_core PUBLIC cxx_std_20)
+target_link_libraries(soilsim_core PRIVATE nlohmann_json::nlohmann_json)
 
 if(MSVC)
     target_compile_options(soilsim_core PRIVATE /W4 /WX)

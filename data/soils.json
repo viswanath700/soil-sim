@@ -1,0 +1,79 @@
+{
+  "soils": [
+    {
+      "name": "dry_sand",
+      "cohesion_kPa": 0.0,
+      "friction_angle_deg": 30.0,
+      "unit_weight_N_m3": 16000.0,
+      "adhesion_kPa": 0.0,
+      "soil_tool_friction_deg": 20.0,
+      "bekker_kc": 1.0,
+      "bekker_kphi": 1.0,
+      "bekker_n": 1.0,
+      "angle_of_repose_deg": 32.0,
+      "bulking_factor": 1.15,
+      "source": "Representative placeholder based on terramechanics reference tables",
+      "verified": false
+    },
+    {
+      "name": "wet_clay",
+      "cohesion_kPa": 45.0,
+      "friction_angle_deg": 18.0,
+      "unit_weight_N_m3": 19000.0,
+      "adhesion_kPa": 12.0,
+      "soil_tool_friction_deg": 15.0,
+      "bekker_kc": 2.0,
+      "bekker_kphi": 1.0,
+      "bekker_n": 1.1,
+      "angle_of_repose_deg": 25.0,
+      "bulking_factor": 1.25,
+      "source": "Representative placeholder based on terramechanics reference tables",
+      "verified": false
+    },
+    {
+      "name": "loam",
+      "cohesion_kPa": 20.0,
+      "friction_angle_deg": 25.0,
+      "unit_weight_N_m3": 17000.0,
+      "adhesion_kPa": 5.0,
+      "soil_tool_friction_deg": 18.0,
+      "bekker_kc": 1.5,
+      "bekker_kphi": 1.0,
+      "bekker_n": 1.0,
+      "angle_of_repose_deg": 28.0,
+      "bulking_factor": 1.2,
+      "source": "Representative placeholder based on terramechanics reference tables",
+      "verified": false
+    },
+    {
+      "name": "gravel",
+      "cohesion_kPa": 5.0,
+      "friction_angle_deg": 38.0,
+      "unit_weight_N_m3": 19000.0,
+      "adhesion_kPa": 0.0,
+      "soil_tool_friction_deg": 22.0,
+      "bekker_kc": 1.0,
+      "bekker_kphi": 1.0,
+      "bekker_n": 1.2,
+      "angle_of_repose_deg": 38.0,
+      "bulking_factor": 1.3,
+      "source": "Representative placeholder based on terramechanics reference tables",
+      "verified": false
+    },
+    {
+      "name": "topsoil",
+      "cohesion_kPa": 10.0,
+      "friction_angle_deg": 22.0,
+      "unit_weight_N_m3": 15000.0,
+      "adhesion_kPa": 3.0,
+      "soil_tool_friction_deg": 16.0,
+      "bekker_kc": 1.2,
+      "bekker_kphi": 1.0,
+      "bekker_n": 0.9,
+      "angle_of_repose_deg": 27.0,
+      "bulking_factor": 1.3,
+      "source": "Representative placeholder based on terramechanics reference tables",
+      "verified": false
+    }
+  ]
+}
