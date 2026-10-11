@@ -1,4 +1,5 @@
 add_library(soilsim_core STATIC
+    src/cutting.cpp
     src/soil.cpp
     src/version.cpp
 )
