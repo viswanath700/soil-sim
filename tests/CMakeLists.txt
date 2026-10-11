@@ -9,6 +9,8 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(soilsim_tests
     test_cutting.cpp
+    test_excavate.cpp
+    test_heightfield.cpp
     test_soil.cpp
     test_smoke.cpp
 )
