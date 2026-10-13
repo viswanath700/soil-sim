@@ -13,6 +13,7 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 CTestTestfile.cmake
+CMakeUserPresets.json
 
 # Generated binaries
 *.exe
@@ -25,3 +26,10 @@ CTestTestfile.cmake
 # Editor caches
 *.swp
 *.tmp
+
+# Python caches and local tooling artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/

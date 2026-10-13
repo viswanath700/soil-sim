@@ -3,6 +3,9 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include <filesystem>
+#include <fstream>
+
 TEST_CASE("heightfield samples, differentiates, and measures volume", "[heightfield]")
 {
     soilsim::Heightfield terrain(3, 3, 1.0);
@@ -26,4 +29,24 @@ TEST_CASE("heightfield serialized bytes are stable", "[heightfield]")
     soilsim::Heightfield terrain(2, 2, 0.25, 1.0, 2.0, 3.0);
     REQUIRE(terrain.serializedBytes() == terrain.serializedBytes());
     REQUIRE(terrain.heights().size() == 4);
+}
+
+TEST_CASE("heightfield binary round trip and malformed input are rejected", "[heightfield]")
+{
+    const auto path = std::filesystem::temp_directory_path() / "soilsim_heightfield_test.bin";
+    const auto malformedPath =
+        std::filesystem::temp_directory_path() / "soilsim_heightfield_malformed.bin";
+    soilsim::Heightfield terrain(2, 2, 0.25, 1.0, 2.0, 3.0);
+    terrain.at(1, 0) = 4.5;
+    terrain.writeBinary(path);
+    const auto loaded = soilsim::Heightfield::readBinary(path);
+    REQUIRE(loaded.serializedBytes() == terrain.serializedBytes());
+
+    {
+        std::ofstream output(malformedPath, std::ios::binary);
+        output << "bad";
+    }
+    REQUIRE_THROWS(soilsim::Heightfield::readBinary(malformedPath));
+    std::filesystem::remove(path);
+    std::filesystem::remove(malformedPath);
 }

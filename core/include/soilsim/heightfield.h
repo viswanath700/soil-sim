@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
 #include <utility>
 #include <vector>
 
@@ -27,6 +28,8 @@ public:
 
     const std::vector<double>& heights() const noexcept;
     std::vector<std::uint8_t> serializedBytes() const;
+    void writeBinary(const std::filesystem::path& path) const;
+    static Heightfield readBinary(const std::filesystem::path& path);
 
 private:
     std::size_t index(std::size_t column, std::size_t row) const;
@@ -37,7 +40,7 @@ private:
     double originY_;
     std::vector<double> heights_;
 
-    // Reserved for the Week 2 environment model.
+    // Reserved for the future environment model.
     std::vector<double> moisture_;
     std::vector<double> frozenFraction_;
     std::vector<double> compaction_;

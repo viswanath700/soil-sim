@@ -1,0 +1,40 @@
+{
+  "soil": "dry_sand",
+  "force_N": 5000.0,
+  "dt_s": 0.1,
+  "grid": {
+    "columns": 40,
+    "rows": 40,
+    "cell_size_m": 0.2,
+    "origin_x_m": 0.0,
+    "origin_y_m": 0.0,
+    "initial_height_m": 1.0
+  },
+  "bucket": {
+    "capacity_m3_loose": 10.0,
+    "width_m": 0.5
+  },
+  "path": [
+    {
+      "x_m": 3.0,
+      "y_m": 3.0,
+      "z_m": 0.7,
+      "yaw_rad": 0.0,
+      "rake_angle_rad": 0.0
+    },
+    {
+      "x_m": 3.5,
+      "y_m": 3.0,
+      "z_m": 0.7,
+      "yaw_rad": 0.0,
+      "rake_angle_rad": 0.0
+    },
+    {
+      "x_m": 4.0,
+      "y_m": 3.0,
+      "z_m": 0.7,
+      "yaw_rad": 0.0,
+      "rake_angle_rad": 0.0
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <fstream>
 #include <stdexcept>
 #include <string>
 
@@ -134,14 +135,18 @@ const std::vector<double>& Heightfield::heights() const noexcept
 std::vector<std::uint8_t> Heightfield::serializedBytes() const
 {
     std::vector<std::uint8_t> bytes;
-    bytes.reserve(2 * sizeof(std::uint64_t) + 3 * sizeof(double) +
+    bytes.reserve(8 + sizeof(std::uint32_t) + 2 * sizeof(std::uint64_t) + 3 * sizeof(double) +
                   heights_.size() * sizeof(double));
     const auto append = [&bytes](const auto& value) {
         const auto* begin = reinterpret_cast<const std::uint8_t*>(&value);
         bytes.insert(bytes.end(), begin, begin + sizeof(value));
     };
+    constexpr char magic[] = "SOILHF01";
+    bytes.insert(bytes.end(), magic, magic + 8);
+    const std::uint32_t version = 1;
     const std::uint64_t columns = columns_;
     const std::uint64_t rows = rows_;
+    append(version);
     append(columns);
     append(rows);
     append(cellSize_);
@@ -151,5 +156,80 @@ std::vector<std::uint8_t> Heightfield::serializedBytes() const
         append(height);
     }
     return bytes;
+}
+
+void Heightfield::writeBinary(const std::filesystem::path& path) const
+{
+    const std::vector<std::uint8_t> bytes = serializedBytes();
+    std::ofstream output(path, std::ios::binary);
+    if (!output) {
+        throw std::runtime_error("Unable to open heightfield output '" + path.string() + "'");
+    }
+    output.write(reinterpret_cast<const char*>(bytes.data()),
+                 static_cast<std::streamsize>(bytes.size()));
+    if (!output) {
+        throw std::runtime_error("Unable to write heightfield output '" + path.string() + "'");
+    }
+}
+
+Heightfield Heightfield::readBinary(const std::filesystem::path& path)
+{
+    std::ifstream input(path, std::ios::binary);
+    if (!input) {
+        throw std::runtime_error("Unable to open heightfield input '" + path.string() + "'");
+    }
+    input.seekg(0, std::ios::end);
+    const auto size = input.tellg();
+    input.seekg(0, std::ios::beg);
+    if (size < 8 + sizeof(std::uint32_t) + 2 * sizeof(std::uint64_t) + 3 * sizeof(double)) {
+        throw std::runtime_error("Heightfield input is truncated");
+    }
+    std::vector<std::uint8_t> bytes(static_cast<std::size_t>(size));
+    input.read(reinterpret_cast<char*>(bytes.data()), size);
+    if (!input) {
+        throw std::runtime_error("Unable to read heightfield input '" + path.string() + "'");
+    }
+    std::size_t offset = 0;
+    const auto read = [&bytes, &offset](auto& value) {
+        if (offset + sizeof(value) > bytes.size()) {
+            throw std::runtime_error("Heightfield input is truncated");
+        }
+        std::memcpy(&value, bytes.data() + offset, sizeof(value));
+        offset += sizeof(value);
+    };
+    constexpr char magic[] = "SOILHF01";
+    if (std::memcmp(bytes.data(), magic, 8) != 0) {
+        throw std::runtime_error("Unsupported heightfield magic");
+    }
+    offset += 8;
+    std::uint32_t version = 0;
+    std::uint64_t columns = 0;
+    std::uint64_t rows = 0;
+    double cellSize = 0.0;
+    double originX = 0.0;
+    double originY = 0.0;
+    read(version);
+    read(columns);
+    read(rows);
+    read(cellSize);
+    read(originX);
+    read(originY);
+    if (version != 1) {
+        throw std::runtime_error("Unsupported heightfield version");
+    }
+    if (columns == 0 || rows == 0 || columns > SIZE_MAX / rows) {
+        throw std::runtime_error("Invalid heightfield dimensions");
+    }
+    const std::size_t sampleCount = static_cast<std::size_t>(columns * rows);
+    if (sampleCount > (bytes.size() - offset) / sizeof(double) ||
+        bytes.size() - offset != sampleCount * sizeof(double)) {
+        throw std::runtime_error("Malformed or truncated heightfield samples");
+    }
+    Heightfield result(static_cast<std::size_t>(columns), static_cast<std::size_t>(rows),
+                       cellSize, originX, originY);
+    for (double& height : result.heights_) {
+        read(height);
+    }
+    return result;
 }
 } // namespace soilsim
