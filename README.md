@@ -285,3 +285,30 @@ demonstration, not site-calibrated engineering predictions.
 See [docs/model.md](docs/model.md) for equations, units, assumptions, material
 accounting, convergence criteria, and binary-format details. See
 [docs/overall_plan.md](docs/overall_plan.md) for the broader project roadmap.
+
+## Playback viewer
+
+The repository includes an optional Unreal Engine 5.8.3 C++ playback viewer in
+[unreal/](unreal/). It reads `heightfield_final.bin` produced by `dig_cli` and
+creates a procedural mesh at runtime. Simulation physics remains in
+`soilsim_core`; the viewer only loads and displays the result.
+
+Build the core Release library first:
+
+```bat
+cmake --preset release
+cmake --build --preset release
+```
+
+Then build the Unreal project from a Visual Studio Developer Command Prompt:
+
+```bat
+cd unreal
+call "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" SoilSimViewer Win64 Development -Project="%CD%\SoilSimViewer.uproject" -WaitMutex
+```
+
+Set the actor's `Heightfield File` property to the path of a generated
+`heightfield_final.bin`, relative to the Unreal project directory. The
+default is `../out/sample/heightfield_final.bin`. The viewer is playback-only;
+live linking, weather, terrain editing, and excavator animation are not part
+of this integration.
