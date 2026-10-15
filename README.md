@@ -291,7 +291,9 @@ accounting, convergence criteria, and binary-format details. See
 The repository includes an optional Unreal Engine 5.8.3 C++ playback viewer in
 [unreal/](unreal/). It reads `heightfield_final.bin` produced by `dig_cli` and
 creates a procedural mesh at runtime. Simulation physics remains in
-`soilsim_core`; the viewer only loads and displays the result.
+`soilsim_core`; the viewer only loads and displays the result. The viewer
+converts the core's metre-valued positions and heights to Unreal centimetres at
+the display boundary.
 
 Build the core Release library first:
 
@@ -311,4 +313,10 @@ Set the actor's `Heightfield File` property to the path of a generated
 `heightfield_final.bin`, relative to the Unreal project directory. The
 default is `../out/sample/heightfield_final.bin`. The viewer is playback-only;
 live linking, weather, terrain editing, and excavator animation are not part
-of this integration.
+of this integration. The playback actor creates and activates its own camera,
+movable directional light, sky atmosphere, and real-time sky light, so a new
+level needs only the actor to display the terrain.
+
+The project game mode spawns Unreal's default free-fly pawn. After loading the
+terrain, the playback actor positions and aims that pawn at the heightfield.
+Use Unreal's default WASD and mouse controls to inspect the scene.

@@ -5,6 +5,9 @@
 #include "SoilSimPlaybackActor.generated.h"
 
 class UProceduralMeshComponent;
+class UDirectionalLightComponent;
+class USkyLightComponent;
+class USkyAtmosphereComponent;
 
 UCLASS()
 class SOILSIMVIEWER_API ASoilSimPlaybackActor final : public AActor
@@ -26,6 +29,15 @@ private:
 
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<UProceduralMeshComponent> Mesh;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UDirectionalLightComponent> SunLight;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<USkyLightComponent> SkyLight;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<USkyAtmosphereComponent> SkyAtmosphere;
 
     uint64 Columns = 0;
     uint64 Rows = 0;
