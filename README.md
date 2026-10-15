@@ -282,7 +282,8 @@ The current presets are representative placeholders and are marked
 `"verified": false`. They are intended for deterministic software validation and
 demonstration, not site-calibrated engineering predictions.
 
-See [docs/model.md](docs/model.md) for equations, units, assumptions, material
+See [docs/limitations.md](docs/limitations.md) for the full list of limitations
+and [docs/model.md](docs/model.md) for equations, units, assumptions, material
 accounting, convergence criteria, and binary-format details. See
 [docs/overall_plan.md](docs/overall_plan.md) for the broader project roadmap.
 
@@ -313,9 +314,9 @@ Set the actor's `Heightfield File` property to the path of a generated
 `heightfield_final.bin`, relative to the Unreal project directory. The
 default is `../out/sample/heightfield_final.bin`. The viewer is playback-only;
 live linking, weather, terrain editing, and excavator animation are not part
-of this integration. The playback actor creates and activates its own camera,
-movable directional light, sky atmosphere, and real-time sky light, so a new
-level needs only the actor to display the terrain.
+of this integration. The playback actor creates its own movable directional
+light, sky atmosphere, and real-time sky light, so a new level needs only the
+actor to display the terrain.
 
 The project game mode spawns Unreal's default free-fly pawn. After loading the
 terrain, the playback actor positions and aims that pawn at the heightfield.
