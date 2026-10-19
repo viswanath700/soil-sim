@@ -108,6 +108,7 @@ Cut order if behind: layering, vegetation, groundwater, erosion. Protect: core t
 - Parameters are representative, not site-calibrated.
 
 ## 10. Future Considerations
+- **Separate excavation phases:** model bucket penetration into soil independently from horizontal dragging/cutting, including the forces and material removal for each phase. The current constant-force depth solver remains the baseline until this is implemented.
 - **Hybrid particles near the bucket** for realistic flow and clumping, with the heightfield for the far field.
 - **True 3D terrain:** voxel/SDF or UE 5.8 Mesh Terrain (experimental) to support overhangs, caves, and undercuts.
 - **Continuum methods:** SPH or material point method as high-fidelity references for validating the fast model.

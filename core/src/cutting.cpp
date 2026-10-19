@@ -22,16 +22,19 @@ void validateSoil(const soilsim::SoilParams& soil)
     requireFinite(soil.unitWeight, "soil.unitWeight");
     requireFinite(soil.adhesion, "soil.adhesion");
     requireFinite(soil.soilToolFriction, "soil.soilToolFriction");
+
+    const double halfPi = kPi * 0.5;
+
     if (soil.cohesion < 0.0 || soil.adhesion < 0.0) {
         throw std::invalid_argument("soil cohesion and adhesion must be nonnegative");
     }
-    if (soil.frictionAngle < 0.0 || soil.frictionAngle >= kPi / 2.0) {
+    if (soil.frictionAngle < 0.0 || soil.frictionAngle >= halfPi) {
         throw std::invalid_argument("soil.frictionAngle must be between 0 and pi/2 radians");
     }
     if (soil.unitWeight <= 0.0) {
         throw std::invalid_argument("soil.unitWeight must be positive");
     }
-    if (soil.soilToolFriction < 0.0 || soil.soilToolFriction > kPi / 2.0) {
+    if (soil.soilToolFriction < 0.0 || soil.soilToolFriction > halfPi) {
         throw std::invalid_argument(
             "soil.soilToolFriction must be between 0 and pi/2 radians");
     }
@@ -64,13 +67,14 @@ CuttingResult RankineCuttingModel::cut(const SoilParams& soil, double depth, dou
 {
     validateCutInputs(soil, depth, width, rakeAngle, surchargePa);
 
-    const double halfPi = kPi / 2.0;
-    const double kpAngle = halfPi / 2.0 + soil.frictionAngle / 2.0;
-    const double kp = std::tan(kpAngle) * std::tan(kpAngle);
-    const double force = width *
-                         (0.5 * soil.unitWeight * depth * depth * kp +
-                          2.0 * soil.cohesion * depth * std::sqrt(kp) +
-                          surchargePa * depth * kp);
+    const double halfPi = kPi * 0.5;
+    const double kpAngle = (halfPi + soil.frictionAngle) * 0.5;
+    const double tanKpAngle = std::tan(kpAngle);
+    const double kp = tanKpAngle * tanKpAngle;
+    const double force = width
+                         * (0.5 * soil.unitWeight * depth * depth * kp
+                          + 2.0 * soil.cohesion * depth * tanKpAngle // sqrt(kp) replaced with tanKpAngle
+                          + surchargePa * depth * kp);
     if (!std::isfinite(force) || force < 0.0) {
         throw std::runtime_error("Rankine force calculation produced an invalid result");
     }
@@ -96,13 +100,15 @@ double solveDepthForForce(const ICuttingModel& model, const SoilParams& soil,
     }
     const CuttingResult upper = model.cut(soil, maxDepth, width, rakeAngle, surchargePa);
     if (appliedForce >= upper.force) {
+        // The applied force exceeds the force at max depth, return max depth.
         return maxDepth;
     }
 
+    // Conduct a binary search to find the depth that produces the applied force.
     double lowerDepth = 0.0;
     double upperDepth = maxDepth;
     while (upperDepth - lowerDepth > tol) {
-        const double middleDepth = lowerDepth + (upperDepth - lowerDepth) / 2.0;
+        const double middleDepth = lowerDepth + (upperDepth - lowerDepth) * 0.5;
         const double middleForce =
             model.cut(soil, middleDepth, width, rakeAngle, surchargePa).force;
         if (middleForce < appliedForce) {
@@ -111,6 +117,6 @@ double solveDepthForForce(const ICuttingModel& model, const SoilParams& soil,
             upperDepth = middleDepth;
         }
     }
-    return lowerDepth + (upperDepth - lowerDepth) / 2.0;
+    return lowerDepth + (upperDepth - lowerDepth) * 0.5;
 }
 } // namespace soilsim

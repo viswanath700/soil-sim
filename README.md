@@ -104,7 +104,9 @@ out\build\release\tools\dig_cli.exe ^
 ```
 
 The scenario defines one soil, applied force, timestep, flat grid dimensions,
-bucket geometry, and a sequence of bucket poses. The sample uses:
+bucket geometry, and a sequence of bucket poses. The CLI accumulates material
+along the path, then dumps any carried material beside the final pose, one
+bucket width to its left. The sample uses:
 
 - `dry_sand`
 - `5000 N` applied force
@@ -183,6 +185,10 @@ bucket_fill_m3_loose
 ```text
 x_m,y_m,height_m
 ```
+
+The final heightfield includes the spoil pile dumped after the path. The last
+`bucket_fill_m3_loose` value in `steps.csv` records the fill before this dump;
+the CLI's final bucket fill is zero.
 
 `heightfield_final.bin` is a deterministic little-endian binary heightfield
 file. Its header contains the `SOILHF01` magic, version `1`, fixed-width

@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -258,6 +259,12 @@ int main(int argc, char** argv)
             steps.push_back(result);
         }
         const auto finish = std::chrono::steady_clock::now();
+        const auto& finalPoint = scenario.path.back();
+        const double dumpX =
+            finalPoint.x - std::sin(finalPoint.yaw) * scenario.bucketWidth;
+        const double dumpY =
+            finalPoint.y + std::cos(finalPoint.yaw) * scenario.bucketWidth;
+        soilsim::dump(terrain, bucket, *soilIterator, dumpX, dumpY);
         const double elapsedSeconds =
             std::chrono::duration<double>(finish - start).count();
         const double stepsPerSecond =

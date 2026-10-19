@@ -63,10 +63,10 @@ DigStepResult digStep(Heightfield& terrain, BucketState& bucket, const SoilParam
     const double sine = std::sin(pose.yaw);
     double removedVolume = 0.0;
     double maximumDepth = 0.0;
-    double actualForce = 0.0;
     const double availableLoose = bucket.capacity - bucket.carriedVolume;
     const double availableInSitu = availableLoose / soil.bulkingFactor;
     double remainingInSitu = availableInSitu;
+    const double cellArea = terrain.cellSize() * terrain.cellSize();
 
     for (std::size_t row = 0; row < terrain.rows() && remainingInSitu > 0.0; ++row) {
         for (std::size_t column = 0; column < terrain.columns() && remainingInSitu > 0.0;
@@ -78,18 +78,20 @@ DigStepResult digStep(Heightfield& terrain, BucketState& bucket, const SoilParam
             const double localX = cosine * (centerX - pose.x) + sine * (centerY - pose.y);
             const double localY = -sine * (centerX - pose.x) + cosine * (centerY - pose.y);
             if (std::abs(localX) > halfWidth || std::abs(localY) > halfWidth) {
+                // The cell is outside the bucket's width, skip it.
                 continue;
             }
 
             const double commandedDepth = std::max(0.0, terrain.at(column, row) - pose.z);
             if (commandedDepth == 0.0) {
+                // The commanded depth is zero, skip this cell.
                 continue;
             }
             const double solvedDepth = solveDepthForForce(
                 model, soil, appliedForce, pose.width, pose.rakeAngle, 0.0, commandedDepth);
-            const double cellArea = terrain.cellSize() * terrain.cellSize();
             const double removableDepth = std::min(solvedDepth, remainingInSitu / cellArea);
             if (removableDepth <= 0.0) {
+                // The removable depth is zero or negative, skip this cell.
                 continue;
             }
             terrain.at(column, row) -= removableDepth;
@@ -97,10 +99,11 @@ DigStepResult digStep(Heightfield& terrain, BucketState& bucket, const SoilParam
             removedVolume += cellVolume;
             remainingInSitu -= cellVolume;
             maximumDepth = std::max(maximumDepth, removableDepth);
-            actualForce = model.cut(soil, removableDepth, pose.width, pose.rakeAngle, 0.0).force;
         }
     }
 
+    const double actualForce =
+        model.cut(soil, maximumDepth, pose.width, pose.rakeAngle, 0.0).force;
     const double looseRemoved = removedVolume * soil.bulkingFactor;
     bucket.carriedVolume += looseRemoved;
     return DigStepResult{dt, maximumDepth, actualForce, removedVolume, bucket.carriedVolume};
