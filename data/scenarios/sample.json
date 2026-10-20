@@ -14,6 +14,12 @@
     "capacity_m3_loose": 10.0,
     "width_m": 0.5
   },
+  "moisture": {
+    "active_layer_depth_m": 0.3,
+    "evaporation_rate_mm_per_h_per_c_per_solar": 0.01,
+    "source": "Illustrative placeholder moisture-model parameterization; not site-calibrated.",
+    "verified": false
+  },
   "path": [
     {
       "x_m": 3.0,

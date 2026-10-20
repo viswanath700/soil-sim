@@ -12,7 +12,13 @@
       "bekker_n": 1.0,
       "angle_of_repose_deg": 32.0,
       "bulking_factor": 1.15,
-      "source": "Representative placeholder based on terramechanics reference tables",
+      "porosity_m3_m3": 0.43,
+      "saturated_hydraulic_conductivity_m_s": 0.0001,
+      "field_capacity_m3_m3": 0.09,
+      "optimum_moisture_for_cohesion_m3_m3": 0.10,
+      "frozen_strength_multiplier": 2.5,
+      "thermal_lag_time_constant_s": 3600.0,
+      "source": "Illustrative placeholder parameters; not site-calibrated.",
       "verified": false
     },
     {
@@ -27,7 +33,13 @@
       "bekker_n": 1.1,
       "angle_of_repose_deg": 25.0,
       "bulking_factor": 1.25,
-      "source": "Representative placeholder based on terramechanics reference tables",
+      "porosity_m3_m3": 0.48,
+      "saturated_hydraulic_conductivity_m_s": 0.00000001,
+      "field_capacity_m3_m3": 0.35,
+      "optimum_moisture_for_cohesion_m3_m3": 0.28,
+      "frozen_strength_multiplier": 3.0,
+      "thermal_lag_time_constant_s": 21600.0,
+      "source": "Illustrative placeholder parameters; not site-calibrated.",
       "verified": false
     },
     {
@@ -42,7 +54,13 @@
       "bekker_n": 1.0,
       "angle_of_repose_deg": 28.0,
       "bulking_factor": 1.2,
-      "source": "Representative placeholder based on terramechanics reference tables",
+      "porosity_m3_m3": 0.45,
+      "saturated_hydraulic_conductivity_m_s": 0.000001,
+      "field_capacity_m3_m3": 0.25,
+      "optimum_moisture_for_cohesion_m3_m3": 0.20,
+      "frozen_strength_multiplier": 2.0,
+      "thermal_lag_time_constant_s": 10800.0,
+      "source": "Illustrative placeholder parameters; not site-calibrated.",
       "verified": false
     },
     {
@@ -57,7 +75,13 @@
       "bekker_n": 1.2,
       "angle_of_repose_deg": 38.0,
       "bulking_factor": 1.3,
-      "source": "Representative placeholder based on terramechanics reference tables",
+      "porosity_m3_m3": 0.35,
+      "saturated_hydraulic_conductivity_m_s": 0.01,
+      "field_capacity_m3_m3": 0.04,
+      "optimum_moisture_for_cohesion_m3_m3": 0.06,
+      "frozen_strength_multiplier": 1.5,
+      "thermal_lag_time_constant_s": 3600.0,
+      "source": "Illustrative placeholder parameters; not site-calibrated.",
       "verified": false
     },
     {
@@ -72,7 +96,13 @@
       "bekker_n": 0.9,
       "angle_of_repose_deg": 27.0,
       "bulking_factor": 1.3,
-      "source": "Representative placeholder based on terramechanics reference tables",
+      "porosity_m3_m3": 0.50,
+      "saturated_hydraulic_conductivity_m_s": 0.00001,
+      "field_capacity_m3_m3": 0.30,
+      "optimum_moisture_for_cohesion_m3_m3": 0.22,
+      "frozen_strength_multiplier": 2.2,
+      "thermal_lag_time_constant_s": 14400.0,
+      "source": "Illustrative placeholder parameters; not site-calibrated.",
       "verified": false
     }
   ]

@@ -24,6 +24,8 @@ work.
 - Bulking-factor material accounting
 - Angle-of-repose-limited dumping
 - Deterministic heightfield binary serialization
+- Standalone deterministic weather-driver and per-cell moisture-bucket
+  components (not yet wired into the CLI digging loop)
 - Scenario and direct command-line execution
 - CSV, binary heightfield, benchmark, and force/depth plot outputs
 - Catch2 unit tests for the soil, cutting, terrain, conservation, determinism,

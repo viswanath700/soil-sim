@@ -107,6 +107,68 @@ factor is a unitless illumination proxy, not irradiance or a measured weather
 quantity. All solar calculations use the same apparent-solar-time convention
 as the daily temperature cycle.
 
+## Per-cell moisture bucket
+
+The moisture update is a deterministic fixed-timestep bucket for one terrain
+cell. Volumetric water content `theta` and porosity `n` are in m^3 water per
+m^3 soil; active layer depth `L` is in m, so soil water storage per unit area
+is `theta * L` in m of water. Rain is supplied as water-equivalent mm/h.
+Snowfall accumulation is handled by the snow/environment update; a melt depth
+is transferred from the cell's SWE to this moisture update exactly once.
+
+For a timestep `dt` (s), rain depth `R`, melt input `M`, total available input
+`P`, infiltration `I`, and runoff `Q` are:
+
+```
+R = rainRate_mm_per_h * 1e-3 / 3600 * dt
+P = R + M
+I = min(P, Ksat * dt, max(0, (n - theta) * L))
+Q = P - I
+theta1 = theta + I / L
+```
+
+`Ksat` is saturated hydraulic conductivity in m/s. Thus infiltration is limited
+by both the conductivity capacity and available pore storage; all water not
+infiltrated is reported as runoff, with no unaccounted boundary loss.
+Evaporation then removes a solar- and temperature-dependent potential flux,
+limited by available soil water:
+
+```
+Epotential = evaporationCoefficient * max(airTemperature_C, 0)
+             * solarFactor * 1e-3 / 3600 * dt
+E = min(theta1 * L, Epotential)
+theta2 = (theta1 * L - E) / L
+```
+
+The configured evaporation coefficient is in mm/(h degC) per unit solar
+factor; `solarFactor` is dimensionless. Drainage removes only storage above
+field capacity `FC`:
+
+```
+Gpotential = Ksat * dt * clamp((theta2 - FC) / (n - FC), 0, 1)
+G = min(max(theta2 - FC, 0) * L, Gpotential)
+thetaFinal = (theta2 * L - G) / L
+```
+
+`G` is drainage in m of water. Flux limits enforce the physical bounds; the
+model does not post-clamp moisture. The snowmelt input must not exceed the
+cell's current SWE, and the update subtracts it from SWE while making it
+available for infiltration/runoff. Snowfall itself is added to SWE by the
+separate snow update before this call. The per-cell balance is therefore:
+
+```
+initial(theta * L + SWE) + rain + snowfall
+  = final(theta * L + SWE) + runoff + evaporation + drainage
+```
+
+For a grid, each water depth is multiplied by cell area before summing. This
+bucket formulation is a simplified demonstrator: `Ksat` is also used to set
+drainage capacity, runoff is an explicit loss from the modeled grid, and
+lateral flow is not modeled. The soil hydraulic values and the sample
+evaporation coefficient are illustrative and marked unverified in their data
+files; the model equations are conservation-based bookkeeping assumptions,
+not a site-calibrated hydrology model.
+
 Scripted precipitation events have a nonnegative start and positive duration,
 with rates in mm of water equivalent per hour. An event contributes on the
 half-open interval `[startSeconds, endSeconds)`; overlapping rates add, and no

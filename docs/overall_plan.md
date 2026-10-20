@@ -81,7 +81,6 @@ Cut order if behind: layering, vegetation, groundwater, erosion. Protect: core t
 5. **Unreal Engine project** with terrain playback/live view, weather and state-driven materials, excavator, effects, and telemetry overlay.
 6. **Scenario set:** dry sand, wet clay, frozen ground, snow-covered soil, plus rain and season variations, each under the same bucket force.
 7. **Documentation:** `docs/model.md` (equations, units, assumptions), `docs/limitations.md`, build and run instructions, benchmark log.
-8. **Recorded demo video** as a fallback to the live build.
 
 ## 7. Success Criteria
 - Same applied force gives clearly different, physically plausible dig depth and volume across soil and weather conditions.
@@ -98,7 +97,6 @@ Cut order if behind: layering, vegetation, groundwater, erosion. Protect: core t
 | Viewer work consumes physics time | Playback-only viewer first; no physics in Unreal. |
 | Parameter values unverified | Flag presets as unverified; cite sources; sensitivity analysis shows which parameters matter. |
 | Model too simple to look realistic | Layer visuals (materials, particles) over the model; state limitations openly. |
-| Live demo failure | Recorded fallback video and prebuilt packaged build. |
 
 ## 9. Known Limitations
 - Heightfield cannot represent overhangs, undercuts, or tunnels.

@@ -107,6 +107,12 @@ std::vector<SoilParams> loadSoils(const std::filesystem::path& path)
             0.0,
             0.0,
             0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
             requiredString(preset, "source", context),
             requiredBoolean(preset, "verified", context)};
 
@@ -128,6 +134,16 @@ std::vector<SoilParams> loadSoils(const std::filesystem::path& path)
             requiredNumber(preset, "angle_of_repose_deg", context);
         soil.angleOfRepose = degreesToRadians(angleOfReposeDegrees);
         soil.bulkingFactor = requiredNumber(preset, "bulking_factor", context);
+        soil.porosity = requiredNumber(preset, "porosity_m3_m3", context);
+        soil.saturatedHydraulicConductivity =
+            requiredNumber(preset, "saturated_hydraulic_conductivity_m_s", context);
+        soil.fieldCapacity = requiredNumber(preset, "field_capacity_m3_m3", context);
+        soil.optimumMoistureForCohesion =
+            requiredNumber(preset, "optimum_moisture_for_cohesion_m3_m3", context);
+        soil.frozenStrengthMultiplier =
+            requiredNumber(preset, "frozen_strength_multiplier", context);
+        soil.thermalLagTimeConstant =
+            requiredNumber(preset, "thermal_lag_time_constant_s", context);
 
         requireNonnegative(soil.cohesion, "cohesion_kPa", context);
         requireAngleDegrees(requiredNumber(preset, "friction_angle_deg", context),
@@ -145,6 +161,29 @@ std::vector<SoilParams> loadSoils(const std::filesystem::path& path)
         requireAngleDegrees(angleOfReposeDegrees, "angle_of_repose_deg", context);
         if (soil.bulkingFactor <= 0.0) {
             throw std::runtime_error(context + " field 'bulking_factor' must be positive");
+        }
+        if (soil.porosity <= 0.0 || soil.porosity >= 1.0) {
+            throw std::runtime_error(context + " field 'porosity_m3_m3' must be between 0 and 1");
+        }
+        requireNonnegative(soil.saturatedHydraulicConductivity,
+                           "saturated_hydraulic_conductivity_m_s", context);
+        if (soil.fieldCapacity <= 0.0 || soil.fieldCapacity >= soil.porosity) {
+            throw std::runtime_error(context +
+                                     " field 'field_capacity_m3_m3' must be between 0 and porosity");
+        }
+        if (soil.optimumMoistureForCohesion < 0.0 ||
+            soil.optimumMoistureForCohesion > soil.porosity) {
+            throw std::runtime_error(context +
+                                     " field 'optimum_moisture_for_cohesion_m3_m3' must be within "
+                                     "the porosity range");
+        }
+        if (soil.frozenStrengthMultiplier < 1.0) {
+            throw std::runtime_error(context +
+                                     " field 'frozen_strength_multiplier' must be at least 1");
+        }
+        if (soil.thermalLagTimeConstant <= 0.0) {
+            throw std::runtime_error(context +
+                                     " field 'thermal_lag_time_constant_s' must be positive");
         }
 
         result.push_back(std::move(soil));

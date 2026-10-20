@@ -15,3 +15,4 @@ compiler, build configuration, grid, and path.
 - loam: 68181.8 dig steps/s (3 steps)
 - gravel: 83333.3 dig steps/s (3 steps)
 - topsoil: 68337.1 dig steps/s (3 steps)
+- dry_sand: 85959.9 dig steps/s (3 steps)

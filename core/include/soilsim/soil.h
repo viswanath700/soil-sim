@@ -19,6 +19,12 @@ struct SoilParams
     double bekkerN;           // dimensionless exponent placeholder
     double angleOfRepose;     // rad
     double bulkingFactor;     // loose/in-situ volume ratio
+    double porosity;          // m^3/m^3
+    double saturatedHydraulicConductivity; // m/s
+    double fieldCapacity;     // m^3/m^3
+    double optimumMoistureForCohesion; // m^3/m^3
+    double frozenStrengthMultiplier;
+    double thermalLagTimeConstant; // s
     std::string source;
     bool verified;
 };

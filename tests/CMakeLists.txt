@@ -11,6 +11,7 @@ add_executable(soilsim_tests
     test_cutting.cpp
     test_excavate.cpp
     test_heightfield.cpp
+    test_moisture.cpp
     test_soil.cpp
     test_smoke.cpp
     test_weather.cpp

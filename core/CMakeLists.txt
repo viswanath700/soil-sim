@@ -2,6 +2,7 @@ add_library(soilsim_core STATIC
     src/cutting.cpp
     src/excavate.cpp
     src/heightfield.cpp
+    src/moisture.cpp
     src/soil.cpp
     src/version.cpp
     src/weather.cpp
