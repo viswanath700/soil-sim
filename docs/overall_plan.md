@@ -4,7 +4,6 @@
 SoilSim is a real-time, semi-empirical soil and terrain simulation for excavation. A constant-force excavator bucket digs into terrain whose behavior changes with soil type, moisture, temperature, snow, and season. The result is a deterministic C++ simulation core, a headless batch runner, and an Unreal Engine 5.8.3 viewer.
 
 **Platform:** Windows 11, Visual Studio 2022 (MSVC toolset 14.44 recommended), CMake + Ninja, Unreal Engine 5.8.3.
-**Duration:** 4 weeks.
 
 ## 2. Objectives
 - Show how the same excavator input produces different dig results under different ground conditions.
@@ -63,9 +62,9 @@ SoilSim is a real-time, semi-empirical soil and terrain simulation for excavatio
 - **unreal/** — UE 5.8.3 project; `soilsim_core` linked as a ThirdParty static library; physics never lives in Unreal.
 - **docs/** — model equations, assumptions, limitations, benchmarks.
 
-## 5. Weekly Targets
+## 5. Milestones
 
-| Week | Target |
+| Phase | Target |
 |---|---|
 | 1 | Core foundation: repo and build, soil presets, Rankine cutting model, constant-force solver, heightfield dig and dump, CLI, force/depth plots, core tests, minimal Unreal playback viewer. |
 | 2 | Environment model: moisture, temperature, freezing, snow; effective-strength function; Reece cutting model; sensitivity sweeps; weather visuals and terrain material in Unreal. |

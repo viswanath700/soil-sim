@@ -60,6 +60,63 @@ at most `1e-6`. The fixed flat-terrain convergence scenario compares 0.20 m and
 0.10 m cells and requires relative in-situ dig-volume difference at most 5%;
 this is a regression threshold for that scenario, not a universal accuracy claim.
 
+## Weather driver
+
+`SimpleWeatherDriver` is a deterministic function of a start timestamp, an
+elapsed simulation time in seconds, and one immutable weather profile. The
+calendar is the proleptic Gregorian calendar for years 1 through 9999. Start
+timestamps are UTC with no daylight-saving adjustments; timestamps contain a
+date and seconds since UTC midnight in `[0, 86400)`. Leap years follow the
+Gregorian 4/100/400 rule. Time advances across dates using elapsed seconds,
+without consulting the system clock.
+
+Profile air temperature is an illustrative smooth approximation, in degrees C:
+
+```
+Tair = Tmean
+     + Aseason * cos(2*pi*(dayOfYear - seasonalPeakDay)/daysInYear)
+     + Adaily * cos(2*pi*(solarHour - 15)/24)
+```
+
+`Tmean`, `Aseason`, and `Adaily` are in degrees C. The seasonal peak day is
+one-based; its phase uses 365 or 366 days according to the Gregorian year. The
+daily cycle has its minimum at 03:00 and maximum at 15:00 apparent solar time.
+Apparent solar time is UTC clock time plus longitude/15 hours, wrapped into
+`[0,24)`; the equation of time is omitted. Profile parameters are synthetic
+unless a weather file provides a verified source.
+
+Solar declination and daylight use a first-order solar-geometry approximation
+based on Allen et al., FAO Irrigation and Drainage Paper 56 (1998), equations
+24, 25, and 34:
+
+```
+delta = 0.409 * sin(2*pi*dayOfYear/365 - 1.39)  // radians
+cosSunsetHourAngle = -tan(latitude) * tan(delta)
+dayLengthHours = 24 * acos(cosSunsetHourAngle) / pi
+sinElevation = sin(latitude)*sin(delta)
+             + cos(latitude)*cos(delta)*cos(hourAngle)
+solarFactor = clamp(sinElevation, 0, 1)
+```
+
+Latitude, declination, and hour angle are in radians. Hour angle is
+`(solarHour - 12)*pi/12`. Solar factor is zero outside daylight. Values of
+`cosSunsetHourAngle <= -1` represent polar day (24 hours); values `>= 1`
+represent polar night (zero hours). The declination expression uses a fixed
+365-day solar approximation even in a Gregorian leap year. This clear-sky
+factor is a unitless illumination proxy, not irradiance or a measured weather
+quantity. All solar calculations use the same apparent-solar-time convention
+as the daily temperature cycle.
+
+Scripted precipitation events have a nonnegative start and positive duration,
+with rates in mm of water equivalent per hour. An event contributes on the
+half-open interval `[startSeconds, endSeconds)`; overlapping rates add, and no
+active event means zero precipitation. At air temperature strictly below the
+configured threshold, all event precipitation is snowfall; at the threshold
+and above, it is rain. Rates are not converted to water depth by the weather
+driver. Weather profiles validate finite values, temperature bounds of
+`[-100, 100]` degrees C, latitude and longitude bounds of `[-90, 90]` and
+`[-180, 180]` degrees, and event rates from zero through 100000 mm/h.
+
 ## CLI output formats
 
 `steps.csv` contains `time_s`, `depth_m`, `force_N`,

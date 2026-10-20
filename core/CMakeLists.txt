@@ -4,6 +4,7 @@ add_library(soilsim_core STATIC
     src/heightfield.cpp
     src/soil.cpp
     src/version.cpp
+    src/weather.cpp
 )
 
 target_include_directories(soilsim_core

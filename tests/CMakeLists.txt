@@ -13,6 +13,7 @@ add_executable(soilsim_tests
     test_heightfield.cpp
     test_soil.cpp
     test_smoke.cpp
+    test_weather.cpp
 )
 
 target_link_libraries(soilsim_tests PRIVATE Catch2::Catch2WithMain soilsim_core)

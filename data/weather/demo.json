@@ -1,0 +1,22 @@
+{
+  "source": "Synthetic demonstration profile; coefficients are illustrative and not site-calibrated.",
+  "verified": false,
+  "air_temperature": {
+    "mean_c": 12.0,
+    "daily_amplitude_c": 8.0,
+    "seasonal_amplitude_c": 0.0,
+    "seasonal_peak_day": 200
+  },
+  "solar": {
+    "latitude_deg": 45.0,
+    "longitude_deg": 0.0
+  },
+  "rain_snow_threshold_c": 0.0,
+  "precipitation_events": [
+    {
+      "start_seconds": 3600.0,
+      "end_seconds": 7200.0,
+      "rate_mm_per_h": 2.0
+    }
+  ]
+}
